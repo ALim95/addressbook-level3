@@ -1,12 +1,13 @@
 package seedu.addressbook.ui;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seedu.addressbook.data.person.Person;
 import seedu.addressbook.logic.Logic;
 import seedu.addressbook.Main;
 
@@ -18,7 +19,9 @@ import java.io.IOException;
  */
 public class Gui {
 
-    /** Offset required to convert between 1-indexing and 0-indexing.  */
+    /**
+     * Offset required to convert between 1-indexing and 0-indexing.
+     */
     public static final int DISPLAYED_INDEX_OFFSET = 1;
 
     public static final int INITIAL_WINDOW_WIDTH = 800;
@@ -40,7 +43,7 @@ public class Gui {
         mainWindow.displayWelcomeMessage(version, logic.getStorageFilePath());
     }
 
-    private MainWindow createMainWindow(Stage stage, Stoppable mainApp) throws IOException{
+    private MainWindow createMainWindow(Stage stage, Stoppable mainApp) throws IOException {
         FXMLLoader loader = new FXMLLoader();
 
         /* Note: When calling getResource(), use '/', instead of File.separator or '\\'
@@ -61,16 +64,14 @@ public class Gui {
     }
 
     /**
-     *
      * @return true if the user clicked OK, false otherwise.
      */
-    public String showPersonAddDialog() {
+    public boolean showPersonAddDialog() {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("ui/PersonAddDialog.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
-
+            AnchorPane page = loader.load();
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Add Person");
@@ -78,21 +79,15 @@ public class Gui {
             dialogStage.initOwner(mainStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-
-            // Set the person into the controller.
             PersonAddDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
+            controller.setLogic(logic);
             // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
-            if (controller.isOkClicked()) {
-                return controller.addPerson();
-            }
-            else {
-                return "cancelled";
-            }
+            return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
-            return "error";
+            return false;
         }
     }
 }

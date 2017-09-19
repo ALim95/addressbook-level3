@@ -5,13 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import seedu.addressbook.Main;
 import seedu.addressbook.commands.ExitCommand;
-import seedu.addressbook.data.person.Person;
 import seedu.addressbook.logic.Logic;
 import seedu.addressbook.commands.CommandResult;
-import seedu.addressbook.commands.ListCommand;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
 import java.util.List;
@@ -69,17 +65,7 @@ public class MainWindow {
 
     @FXML
     private void handleAdd() {
-        String addCommand = mainGui.showPersonAddDialog();
-        if (!addCommand.equals("cancelled")) {
-            try {
-                CommandResult result = logic.execute(addCommand);
-                displayResult(result);
-                clearCommandInput();
-            } catch (Exception e) {
-                display(e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
+        mainGui.showPersonAddDialog();
     }
 
     @FXML
