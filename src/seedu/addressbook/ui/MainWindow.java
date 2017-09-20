@@ -5,9 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
+import seedu.addressbook.commands.ClearCommand;
+import seedu.addressbook.commands.CommandResult;
+import seedu.addressbook.commands.HelpCommand;
+import seedu.addressbook.commands.ListCommand;
 import seedu.addressbook.commands.ExitCommand;
 import seedu.addressbook.logic.Logic;
-import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
 import java.util.List;
@@ -71,7 +75,7 @@ public class MainWindow {
     @FXML
     private void handleHelp() {
         try {
-            CommandResult result = logic.execute("help");
+            CommandResult result = logic.execute(HelpCommand.COMMAND_WORD);
             displayResult(result);
             clearCommandInput();
         } catch (Exception e) {
@@ -83,7 +87,7 @@ public class MainWindow {
     @FXML
     private void handleList() {
         try {
-            CommandResult result = logic.execute("list");
+            CommandResult result = logic.execute(ListCommand.COMMAND_WORD);
             displayResult(result);
             clearCommandInput();
         } catch (Exception e) {
@@ -95,7 +99,7 @@ public class MainWindow {
     @FXML
     private void handleClear() {
         try {
-            CommandResult result = logic.execute("clear");
+            CommandResult result = logic.execute(ClearCommand.COMMAND_WORD);
             displayResult(result);
             clearCommandInput();
         } catch (Exception e) {
