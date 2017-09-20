@@ -7,6 +7,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import seedu.addressbook.commands.AddCommand;
+import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.data.tag.Tag;
@@ -86,22 +87,42 @@ public class PersonAddDialogController {
             personToAdd = getPerson();
             okClicked = true;
             AddCommand command = new AddCommand(personToAdd);
-            logic.execute(command);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.initOwner(dialogStage);
-            alert.setTitle("Add a person");
-            alert.setHeaderText("Person has been successfully added");
-            alert.setContentText(personToAdd.toString());
-            alert.showAndWait();
-            dialogStage.close();
+            CommandResult result = logic.execute(command);
+            if (result.feedbackToUser.equals(AddCommand.MESSAGE_DUPLICATE_PERSON)) {
+                duplicateAddAlert();
+            } else {
+                addSuccessAlert();
+                dialogStage.close();
+            }
         } catch (IllegalValueException e) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(dialogStage);
-            alert.setTitle("Error adding");
-            alert.setHeaderText("Fields are not filled up / invalid input");
-            alert.setContentText(MESSAGE_USAGE);
-            alert.showAndWait();
+            addFailedAlert();
         }
+    }
+
+    private void duplicateAddAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(dialogStage);
+        alert.setTitle("Error adding");
+        alert.setHeaderText("Duplicate person in address book");
+        alert.showAndWait();
+    }
+
+    private void addFailedAlert() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(dialogStage);
+        alert.setTitle("Error adding");
+        alert.setHeaderText("Fields are not filled up / invalid input");
+        alert.setContentText(MESSAGE_USAGE);
+        alert.showAndWait();
+    }
+
+    private void addSuccessAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initOwner(dialogStage);
+        alert.setTitle("Add a person");
+        alert.setHeaderText("Person has been successfully added");
+        alert.setContentText(personToAdd.toString());
+        alert.showAndWait();
     }
 
     private Person getPerson() throws IllegalValueException {
@@ -117,7 +138,7 @@ public class PersonAddDialogController {
         if (tagField.getText().isEmpty()) {
             return new UniqueTagList();
         }
-        String[] stringTags = tagField.getText().split(" ");
+        String[] stringTags = tagField.getText().split(",");
         ArrayList<Tag> newTagList1 = new ArrayList();
         for (String tags : stringTags) {
             newTagList1.add(new Tag(tags));

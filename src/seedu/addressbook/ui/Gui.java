@@ -74,6 +74,7 @@ public class Gui {
             AnchorPane page = loader.load();
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
+            dialogStage.getIcons().add(new Image("file:resources/images/if_Address_Book_86957.png"));
             dialogStage.setTitle("Add Person");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(mainStage);
